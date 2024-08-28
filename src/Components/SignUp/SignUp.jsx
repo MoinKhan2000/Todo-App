@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import SignUPImg from '../../../src/singup.jpg'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router';
 
 export function SignUp() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,18 +20,36 @@ export function SignUp() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
+    try {
+      const url = 'http://localhost:5000/api/user/signup';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const json = await response.json();
+      if (json.success !== false) {
+        toast.success('Account has been created successfully, Please login');
+        navigate('/login')
+      } else {
+        toast.error(json.message || 'Failed to Sign Up Please try again.');
+      }
+    } catch (error) {
+      toast.error(error.message)
+      navigate('/')
+    }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg">
         {/* Left Column: Form */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center lg:text-left">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Sign Up
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -90,7 +112,7 @@ export function SignUp() {
         </div>
 
         {/* Right Column: Image */}
-        <div className="hidden lg:flex justify-center items-center">
+        <div className="hidden md:flex justify-center items-center">
           <img
             src={SignUPImg}
             alt="Signing"
@@ -98,6 +120,7 @@ export function SignUp() {
           />
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </div>
   );
 }

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import LoginImg from '../../../src/login.jpg'
+import LoginImg from '../../../src/login.jpg';
+import { useNavigate } from 'react-router';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -15,28 +19,46 @@ export function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
+    try {
+      const url = 'http://localhost:5000/api/user/signin';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const json = await response.json();
+
+      if (response.ok && json.token) {
+        localStorage.setItem('token', json.token);
+        toast.success('Successfully logged in!');
+        navigate('/todos');
+      } else {
+        toast.error(json.message || 'Failed to log in. Please try again.');
+      }
+    } catch (error) {
+      toast.error('An error occurred. Please try again later.');
+      console.error('Error:', error);
+    }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg">
-        {/* Left Column: Form */}
-
-
-        <div className="hidden lg:flex justify-center items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg">
+        {/* Left Column: Image */}
+        <div className="hidden md:flex justify-center items-center">
           <img
             src={LoginImg}
             alt="Login Illustration"
             className="w-full h-auto rounded-lg shadow-lg"
           />
         </div>
-        {/* Right Column: Image */}
+        {/* Right Column: Form */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center lg:text-left">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Login
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,6 +106,9 @@ export function Login() {
           </form>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </div>
   );
 }
