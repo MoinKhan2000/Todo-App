@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FiMenu, FiX, FiLogIn, FiUserPlus, FiHome, FiInfo } from 'react-icons/fi';
 import { LuListTodo, LuLogOut } from 'react-icons/lu';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '../../Context/userContext';
 
 const menuItems = [
@@ -21,16 +21,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { token, logOutUser } = useUser();
   const navigate = useNavigate();
-
-  // Effect to handle menu open state and token-based login status
-  useEffect(() => {
-    // Directly check the token state from the context
-    if (token) {
-      // Token exists, user is logged in
-    } else {
-      // Token does not exist, user is not logged in
-    }
-  }, [token]);
+  const location = useLocation();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -45,7 +36,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="inline-flex items-center space-x-2">
           <LuListTodo size={30} className="text-black" />
-          <Link to="/" className="font-bold text-lg text-gray-800">ToDoApp</Link>
+          <NavLink to="/" className="font-bold text-lg text-gray-800">ToDoApp</NavLink>
         </div>
 
         {/* Desktop Menu */}
@@ -53,26 +44,30 @@ export default function Navbar() {
           <ul className="inline-flex space-x-8">
             {menuItems.map((item) => (
               <li key={item.name} className="group flex items-center space-x-2">
-                <Link
+                <NavLink
                   to={item.href}
-                  className="relative text-sm text-gray-800 transition-all duration-300 ease-in-out py-3 font-bold border-x-2 px-5 border-transparent hover:rounded-md hover:bg-blue-600 hover:text-white hover:shadow-lg bg-white rounded-md flex items-center"
+                  className={({ isActive }) =>
+                    `relative text-sm font-bold py-3 px-5 rounded-md flex items-center transition-all duration-300 ease-in-out ${isActive ? 'bg-blue-500 text-white' : 'bg-white text-gray-800'} hover:bg-blue-600 hover:text-white`
+                  }
                 >
                   {item.icon}
                   <span className="ml-2">{item.name}</span>
                   <span className="absolute inset-0 -z-10 transition-transform duration-300 ease-in-out bg-white bg-opacity-20 blur-md rounded-lg scale-0 group-hover:scale-100"></span>
-                </Link>
+                </NavLink>
               </li>
             ))}
             {token && (
               <li className="group flex items-center space-x-2">
-                <Link
+                <NavLink
                   to='/todos'
-                  className="relative text-sm text-gray-800 transition-all duration-300 ease-in-out py-3 font-bold border-x-2 px-5 border-transparent hover:rounded-md hover:bg-blue-600 hover:text-white hover:shadow-lg bg-white rounded-md flex items-center"
+                  className={({ isActive }) =>
+                    `relative text-sm font-bold py-3 px-5 rounded-md flex items-center transition-all duration-300 ease-in-out ${isActive ? 'bg-blue-500 text-white' : 'bg-white text-gray-800'} hover:bg-blue-600 hover:text-white`
+                  }
                 >
                   <LuListTodo size={20} />
                   <span className="ml-2">Your Todos</span>
                   <span className="absolute inset-0 -z-10 transition-transform duration-300 ease-in-out bg-white bg-opacity-20 blur-md rounded-lg scale-0 group-hover:scale-100"></span>
-                </Link>
+                </NavLink>
               </li>
             )}
           </ul>
@@ -82,7 +77,7 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center space-x-4">
           {!token ? (
             <>
-              <Link
+              <NavLink
                 to="/login"
                 className="relative rounded-md px-5 font-bold py-3 text-sm text-black border-transparent transition duration-300 ease-in-out overflow-hidden group bg-white hover-border-transparent"
               >
@@ -94,9 +89,9 @@ export default function Navbar() {
                   <span>Login</span>
                   <FiLogIn size={20} className="text-black group-hover:text-white" />
                 </span>
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/signup"
                 className="relative rounded-md px-5 font-bold py-3 text-sm text-black border-transparent transition duration-300 ease-in-out overflow-hidden group bg-white hover-border-transparent"
               >
@@ -108,7 +103,7 @@ export default function Navbar() {
                   <span>Sign Up</span>
                   <FiUserPlus size={20} className="text-black group-hover:text-white" />
                 </span>
-              </Link>
+              </NavLink>
             </>
           ) : (
             <button
@@ -158,27 +153,31 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="mt-6">
-                  <nav className="grid gap-y-8">
+                  <nav className="grid gap-y-4">
                     {menuItems.map((item) => (
-                      <Link
+                      <NavLink
                         key={item.name}
                         to={item.href}
-                        className="relative flex items-center space-x-2 text-base font-semibold text-gray-800 hover:text-gray-900 transition duration-300 ease-in-out"
+                        className={({ isActive }) =>
+                          `relative flex items-center space-x-2 text-base font-semibold transition duration-300 ease-in-out ${isActive ? 'bg-blue-500 text-white' : 'text-gray-800'} hover:bg-blue-600 hover:text-white`
+                        }
                       >
                         {item.icon}
                         <span className="ml-2">{item.name}</span>
                         <span className="absolute inset-0 -z-10 transition-transform duration-300 ease-in-out bg-white bg-opacity-20 blur-md rounded-lg scale-0 hover:scale-100"></span>
-                      </Link>
+                      </NavLink>
                     ))}
                     {token && (
-                      <Link
+                      <NavLink
                         to='/todos'
-                        className="relative flex items-center space-x-2 text-base font-semibold text-gray-800 hover:text-gray-900 transition duration-300 ease-in-out"
+                        className={({ isActive }) =>
+                          `relative flex items-center space-x-2 text-base font-semibold transition duration-300 ease-in-out ${isActive ? 'bg-blue-500 text-white' : 'text-gray-800'} hover:bg-blue-600 hover:text-white`
+                        }
                       >
                         <LuListTodo size={20} />
                         <span className="ml-2">Your Todos</span>
                         <span className="absolute inset-0 -z-10 transition-transform duration-300 ease-in-out bg-white bg-opacity-20 blur-md rounded-lg scale-0 hover:scale-100"></span>
-                      </Link>
+                      </NavLink>
                     )}
                   </nav>
                 </div>
@@ -186,25 +185,34 @@ export default function Navbar() {
               <div className="px-5 py-6 space-y-4">
                 {!token ? (
                   <>
-                    <Link
+                    <NavLink
                       to="/login"
                       className="block w-full rounded-md bg-gray-700 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-gray-800 transition duration-300 ease-in-out"
                     >
-                      <FiLogIn size={20} /> Login
-                    </Link>
-                    <Link
+                      <div className='flex justify-center space-x-4'>
+                        <FiLogIn size={20} />
+                        <span>Login</span>
+                      </div>
+                    </NavLink>
+                    <NavLink
                       to="/signup"
                       className="block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-700 transition duration-300 ease-in-out"
                     >
-                      <FiUserPlus size={20} /> Sign Up
-                    </Link>
+                      <div className='flex justify-center space-x-4'>
+                        <FiUserPlus size={20} />
+                        <span>Sign Up</span>
+                      </div>
+                    </NavLink>
                   </>
                 ) : (
                   <button
                     className="block w-full rounded-md bg-gradient-to-r from-teal-500 via-indigo-500 to-purple-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-gradient-to-br transition duration-300 ease-in-out"
                     onClick={handleLogout}
                   >
-                    <LuLogOut size={20} /> Logout
+                    <div className='flex justify-center'>
+                      <LuLogOut size={20} />
+                      <span>Logout</span>
+                    </div>
                   </button>
                 )}
               </div>

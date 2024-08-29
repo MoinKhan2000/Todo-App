@@ -8,12 +8,13 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useUser } from '../../Context/userContext';
 
 const Todo = () => {
-  const { fetchAllTodos, addTodo, updateTodo } = useTodo();
+  const { fetchAllTodos, addTodo } = useTodo();
   const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ title: '', desc: '', status: 'pending' });
-  const { logOutUser } = useUser()
+  const { logOutUser } = useUser();
+
   // Fetch Todos
   const fetchTodos = async () => {
     try {
@@ -65,17 +66,18 @@ const Todo = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center justify-start">
-      <div className='flex justify-center items-center flex-row space-x-10 my-4'>
+      <div className='flex justify-between items-center w-full max-w-4xl mx-auto my-4'>
         <h1 className="text-3xl font-bold">All Todos</h1>
-        <button
+        <motion.button
           onClick={() => setShowModal(true)}
           className="flex items-center justify-center p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+          whileHover={{ scale: 1.05 }}
         >
           <FaPlus className="mr-2" /> Add Todo
-        </button>
+        </motion.button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12 w-full max-w-6xl mx-auto">
         {todos.length > 0 ? (
           todos.map((todo) => (
             <SingleTodo
@@ -92,7 +94,6 @@ const Todo = () => {
           </div>
         )}
       </div>
-
 
       {/* Modal for Adding Todo */}
       {showModal && (

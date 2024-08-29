@@ -19,6 +19,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/todos" element={<Todo />} />
               <Route path="/logout" element={<Logout />} />
+
             </Routes>
             <Footer />
           </div>

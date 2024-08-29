@@ -6,12 +6,12 @@ import EditTodoModal from './EditTodoModal'; // Import the modal component
 import { toast } from 'react-toastify';
 
 const SingleTodo = ({ todo, fetchAllTodos }) => {
-  const { deleteTodo, toggleTodo, updateTodo } = useTodo();
+  const { deleteTodo, toggleTodo } = useTodo();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const toggleStatus = async () => {
+  const toggleStatus = async (status) => {
     try {
-      const result = await toggleTodo(todo._id);
+      const result = await toggleTodo(todo._id, status);
       if (result.success) {
         toast.success('Todo status updated successfully');
         fetchAllTodos(); // Re-fetch todos
@@ -49,7 +49,7 @@ const SingleTodo = ({ todo, fetchAllTodos }) => {
     <>
       <motion.div
         whileHover={{ scale: 1.05 }}
-        className={`p-8 rounded-lg flex flex-col justify-between items-center text-center space-y-8 bg-white text-black transition duration-300 ease-in-out shadow-2xl cursor-pointer ${todo.status === 'pending' ? 'border-red-500' : 'border-green-500'}`}
+        className="p-8 rounded-lg flex flex-col justify-between items-center text-center space-y-8 bg-white text-black transition duration-300 ease-in-out shadow-2xl cursor-pointer"
       >
         <div className="flex flex-col">
           <h2 className="text-xl font-semibold">{todo.title}</h2>
@@ -58,24 +58,37 @@ const SingleTodo = ({ todo, fetchAllTodos }) => {
         <div className="flex space-x-4 mt-4 md:mt-0">
           <button
             onClick={openEditModal}
-            className="p-3 rounded-xl bg-white text-gray-800 hover:bg-gray-200 transition duration-300"
+            className="p-3 rounded-xl bg-white text-gray-800 hover:bg-gray-200 transition duration-300 flex items-center space-x-2"
             title="Edit"
           >
             <FaEdit />
+            <span className="ml-2">Update</span>
           </button>
           <button
             onClick={deleteTheTodo}
-            className="p-3 rounded-xl bg-white text-gray-800 hover:bg-gray-200 transition duration-300"
+            className="p-3 rounded-xl bg-white text-gray-800 hover:bg-gray-200 transition duration-300 flex items-center space-x-2"
             title="Delete"
           >
             <FaTrash />
+            <span className="ml-2">Delete</span>
+          </button>
+        </div>
+        <div className="flex space-x-2 mt-4 md:mt-0">
+          <button
+            onClick={() => toggleStatus('pending')}
+            className={`p-3 rounded-xl text-white transition duration-300 flex items-center space-x-2 ${todo.status === 'pending' ? 'bg-red-500' : 'bg-gray-400'}`}
+            title="Mark as Pending"
+          >
+            <FaTimes />
+            <span className="ml-2">Pending</span>
           </button>
           <button
-            onClick={toggleStatus}
-            className={`p-3 rounded-xl text-white transition duration-300 ${todo.status === 'pending' ? 'bg-red-500' : 'bg-green-500'}`}
-            title={todo.status === 'pending' ? 'completed' : 'pending'}
+            onClick={() => toggleStatus('complete')}
+            className={`p-3 rounded-xl text-white transition duration-300 flex items-center space-x-2 ${todo.status === 'complete' ? 'bg-green-500' : 'bg-gray-400'}`}
+            title="Mark as Completed"
           >
-            {todo.status === 'pending' ? <FaCheck /> : <FaTimes />}
+            <FaCheck />
+            <span className="ml-2">Complete</span>
           </button>
         </div>
       </motion.div>
