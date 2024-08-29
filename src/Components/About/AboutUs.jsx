@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { FaLock, FaUserShield, FaTasks } from 'react-icons/fa';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import bg from "../../../src/bg.png";
@@ -8,10 +9,16 @@ const AboutUs = () => {
     <div className="relative py-16 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300">
       <div className="absolute inset-0 bg-gradient-to-br from-gray-200 via-white/50 to-gray-300 opacity-50 blur-sm"></div>
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
         {/* Introduction Section */}
-        <div className="flex flex-col md:flex-row items-center justify-between text-center md:text-left mb-12">
+        <motion.div
+          className="flex flex-col md:flex-row items-center justify-between text-center md:text-left mb-12"
+          initial={{ opacity: 0, y: 50 }}  // Start from below
+          animate={{ opacity: 1, y: 0 }}   // Animate to original position
+          transition={{ duration: 0.6 }}
+        >
           <div className="md:w-1/2">
-            <h1 className="lg:text-5xl text-4xl text-transparent font-bold bg-clip-text bg-gradient-to-r from-teal-500 via-indigo-500 to-purple-600 drop-shadow-lg lg:text-left text-justify ">
+            <h1 className="lg:text-5xl text-4xl text-transparent font-bold bg-clip-text bg-gradient-to-r from-teal-500 via-indigo-500 to-purple-600 drop-shadow-lg lg:text-left text-justify">
               About ToDoApp
             </h1>
             <p className="mt-4 text-lg text-gray-600">
@@ -25,10 +32,15 @@ const AboutUs = () => {
               className="w-full max-w-md rounded-lg shadow-2xl transition-transform duration-300 transform hover:scale-105"
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Features Section */}
-        <div className="flex flex-wrap gap-8 mb-12">
+        <motion.div
+          className="flex flex-wrap gap-8 mb-12"
+          initial={{ opacity: 0, y: 50 }}  // Start from below
+          animate={{ opacity: 1, y: 0 }}   // Animate to original position
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           <div className="flex-1 min-w-[250px] bg-white p-6 rounded-lg shadow-xl transition-transform duration-300 transform hover:scale-105 glass-effect">
             <FaUserShield className="text-4xl text-blue-500 mb-4" />
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Authenticity</h3>
@@ -50,10 +62,15 @@ const AboutUs = () => {
               Efficiently Create, Read, Update, and Delete your tasks with a user-friendly interface designed to enhance productivity.
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Key Features Section */}
-        <div className="text-center mt-12">
+        <motion.div
+          className="text-center mt-12"
+          initial={{ opacity: 0, y: 50 }}  // Start from below
+          animate={{ opacity: 1, y: 0 }}   // Animate to original position
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             Key Features
           </h2>
@@ -65,7 +82,7 @@ const AboutUs = () => {
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

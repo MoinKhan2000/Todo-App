@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import SignUPImg from '../../../src/singup.jpg'
+import { motion } from 'framer-motion'; // Import motion from framer-motion
+import SignUPImg from '../../../src/singup.jpg';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router';
+import { useUser } from '../../Context/userContext';
 
 export function SignUp() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { signUp } = useUser();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,41 +23,41 @@ export function SignUp() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    try {
-      const url = 'http://localhost:5000/api/user/signup';
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const json = await response.json();
-      if (json.success !== false) {
-        toast.success('Account has been created successfully, Please login');
-        navigate('/login')
-      } else {
-        toast.error(json.message || 'Failed to Sign Up Please try again.');
-      }
-    } catch (error) {
-      toast.error(error.message)
-      navigate('/')
+
+    // Call signUp from UserContext
+    const result = await signUp(formData);
+
+    if (result.success) {
+      toast.success('Account has been created successfully, Please login');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } else {
+      toast.error(result.message || 'Failed to Sign Up. Please try again.');
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg">
+    <motion.div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg"
+      >
         {/* Left Column: Form */}
         <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Sign Up
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSignUp} className="space-y-4">
             <div className="flex flex-col">
-              <label htmlFor="name" className="text-lg font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="name"
+                className="text-lg font-semibold text-gray-700 mb-2"
+              >
                 Full Name
               </label>
               <input
@@ -68,7 +71,10 @@ export function SignUp() {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="email" className="text-lg font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="text-lg font-semibold text-gray-700 mb-2"
+              >
                 Email
               </label>
               <input
@@ -82,7 +88,10 @@ export function SignUp() {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="password" className="text-lg font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="text-lg font-semibold text-gray-700 mb-2"
+              >
                 Password
               </label>
               <input
@@ -96,8 +105,11 @@ export function SignUp() {
               />
             </div>
 
-            <button
+            <motion.button
               type="submit"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
               className="relative w-full py-3 bg-[#e4e7f2] text-black font-bold rounded-lg overflow-hidden transition duration-300 ease-in-out group outline-none"
             >
               <span
@@ -107,21 +119,36 @@ export function SignUp() {
               <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-indigo-500 to-purple-600 group-hover:text-white">
                 Sign Up
               </span>
-            </button>
+            </motion.button>
           </form>
         </div>
 
         {/* Right Column: Image */}
-        <div className="hidden md:flex justify-center items-center">
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="hidden md:flex justify-center items-center"
+        >
           <img
             src={SignUPImg}
             alt="Signing"
             className="w-full h-auto rounded-lg shadow-lg"
           />
-        </div>
-      </div>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
-    </div>
+        </motion.div>
+      </motion.div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </motion.div>
   );
 }
 

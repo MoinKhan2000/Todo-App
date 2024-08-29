@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import LoginImg from '../../../src/login.jpg';
 import { useNavigate } from 'react-router';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useUser } from '../../Context/userContext';
 
 export function Login() {
   const navigate = useNavigate();
+  const { signIn } = useUser();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,51 +22,61 @@ export function Login() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const url = 'http://localhost:5000/api/user/signin';
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const json = await response.json();
-
-      if (response.ok && json.token) {
-        localStorage.setItem('token', json.token);
-        toast.success('Successfully logged in!');
+    const result = await signIn(formData);
+    if (result.success) {
+      toast.success('Successfully logged in!');
+      setTimeout(() => {
         navigate('/todos');
-      } else {
-        toast.error(json.message || 'Failed to log in. Please try again.');
-      }
-    } catch (error) {
-      toast.error('An error occurred. Please try again later.');
-      console.error('Error:', error);
+      }, 2000);
+    } else {
+      toast.error(result.message || 'Failed to log in. Please try again.');
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg">
+    <motion.div
+      className="flex justify-center items-center min-h-screen bg-gray-100 p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl bg-white p-8 rounded-lg shadow-lg"
+        initial={{ scale: 0.8, y: 50 }}
+        animate={{ scale: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {/* Left Column: Image */}
-        <div className="hidden md:flex justify-center items-center">
+        <motion.div
+          className="hidden md:flex justify-center items-center"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <img
             src={LoginImg}
             alt="Login Illustration"
             className="w-full h-auto rounded-lg shadow-lg"
           />
-        </div>
+        </motion.div>
+
         {/* Right Column: Form */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Login
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="flex flex-col">
-              <label htmlFor="email" className="text-lg font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="text-lg font-semibold text-gray-700 mb-2"
+              >
                 Email
               </label>
               <input
@@ -77,7 +90,10 @@ export function Login() {
               />
             </div>
             <div className="flex flex-col">
-              <label htmlFor="password" className="text-lg font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="text-lg font-semibold text-gray-700 mb-2"
+              >
                 Password
               </label>
               <input
@@ -91,9 +107,13 @@ export function Login() {
               />
             </div>
 
-            <button
+            <motion.button
               type="submit"
               className="relative w-full py-3 bg-[#e4e7f2] text-black font-bold rounded-lg overflow-hidden transition duration-300 ease-in-out group"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.05 }}
             >
               <span
                 className="absolute inset-0 bg-gradient-to-r from-teal-500 via-indigo-500 to-purple-600 transform scale-x-0 transition-transform duration-300 ease-in-out group-hover:scale-x-100 rounded-lg"
@@ -102,14 +122,24 @@ export function Login() {
               <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-indigo-500 to-purple-600 group-hover:text-white">
                 Login
               </span>
-            </button>
+            </motion.button>
           </form>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Toast Container */}
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
-    </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </motion.div>
   );
 }
 

@@ -4,5 +4,6 @@ import AboutUs from './About/AboutUs.jsx'
 import Home from './Home/Home.jsx'
 import Login from './Login/Login.jsx'
 import Footer from './Footer/Footer.jsx'
+import Logout from './Logout/Logout.jsx'
 
-export { Navbar, SignUp, AboutUs, Home, Login, Footer }
+export { Navbar, SignUp, AboutUs, Home, Login, Footer, Logout }

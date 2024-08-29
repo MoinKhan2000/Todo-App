@@ -5,6 +5,7 @@ import SingleTodo from './SingleTodo';
 import { useNavigate } from 'react-router';
 import { useTodo } from '../../Context/todoContext';
 import { toast, ToastContainer } from 'react-toastify';
+import { useUser } from '../../Context/userContext';
 
 const Todo = () => {
   const { fetchAllTodos, addTodo, updateTodo } = useTodo();
@@ -12,7 +13,7 @@ const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ title: '', desc: '', status: 'pending' });
-
+  const { logOutUser } = useUser()
   // Fetch Todos
   const fetchTodos = async () => {
     try {
@@ -29,14 +30,14 @@ const Todo = () => {
 
   // Validate user authentication
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.token;
     if (!token) navigate('/');
-  }, [navigate]);
+  }, [navigate, logOutUser]);
 
   // Fetch todos when component mounts
   useEffect(() => {
     fetchTodos();
-  }, [fetchAllTodos,]);
+  }, [fetchAllTodos, logOutUser]);
 
   // Handle input changes in the form
   const handleInputChange = (e) => {
