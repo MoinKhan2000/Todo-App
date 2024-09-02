@@ -28,6 +28,7 @@ export function SignUp() {
 
     // Call signUp from UserContext
     const result = await signUp(formData);
+    console.log(result);
 
     if (result.success) {
       toast.success('Account has been created successfully, Please login');

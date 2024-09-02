@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaEdit, FaTrash, FaCheck, FaTimes } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useTodo } from '../../Context/todoContext';
-import EditTodoModal from './EditTodoModal'; // Import the modal component
+import EditTodoModal from './EditTodoModal';
 import { toast } from 'react-toastify';
 
 const SingleTodo = ({ todo, fetchAllTodos }) => {
@@ -13,7 +13,7 @@ const SingleTodo = ({ todo, fetchAllTodos }) => {
     try {
       const result = await toggleTodo(todo._id, status);
       if (result.success) {
-        toast.success('Todo status updated successfully');
+        toast.success('Todo status toggled successfully');
         fetchAllTodos(); // Re-fetch todos
       } else {
         toast.error(result.message || 'Failed to update todo status');
@@ -25,10 +25,12 @@ const SingleTodo = ({ todo, fetchAllTodos }) => {
 
   const deleteTheTodo = async () => {
     try {
+
       const result = await deleteTodo(todo._id);
+
       if (result.success) {
         toast.success('Todo deleted successfully');
-        fetchAllTodos(); // Re-fetch todos
+        fetchAllTodos();
       } else {
         toast.error(result.message || 'Failed to delete todo');
       }

@@ -16,19 +16,16 @@ export default class UserRepository {
 
       // Create instance of the UserModel
       const newUser = new UserModel({ name, email, password: hashedPassword });
+      console.log("newuser -> ", newUser);
 
       // Save the new user to the database
       await newUser.save();
 
       return newUser;
     } catch (error) {
-      // Handle specific MongoDB errors (e.g., unique constraint violations)
-      if (error.code === 11000) { // MongoDB duplicate key error
-        throw new ApplicationErrorHandler('Duplicate email error', 409);
-      }
 
       // For other errors, throw a generic error
-      throw new ApplicationErrorHandler(error.message || 'Something went wrong during signup', error.code || 500);
+      throw new ApplicationErrorHandler(error?.message || 'Something went wrong during signup', error.code || 500);
     }
   }
 
