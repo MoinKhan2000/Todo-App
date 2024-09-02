@@ -10,11 +10,16 @@ const SingleTodo = ({ todo, fetchAllTodos }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleStatus = async (status) => {
+    console.log(todo._id);
+    if (todo.status === status) {
+      toast.error(`todo is already ${status}`,);
+      return
+    }
     try {
       const result = await toggleTodo(todo._id, status);
       if (result.success) {
         toast.success('Todo status toggled successfully');
-        fetchAllTodos(); // Re-fetch todos
+        fetchAllTodos();
       } else {
         toast.error(result.message || 'Failed to update todo status');
       }
