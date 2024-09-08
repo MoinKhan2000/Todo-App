@@ -5,8 +5,8 @@ const TodoContext = createContext();
 
 export const TodoProvider = ({ children }) => {
   const { token } = useUser()
-  const host = "http://localhost:5000";
-
+  // const host = "http://localhost:5000";
+  let host = "https://todo-app-backend-ls34.onrender.com";
   // Fetch all todos
   const fetchAllTodos = async () => {
     try {

@@ -4,7 +4,8 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const host = "http://localhost:5000";
+  // const host = "http://localhost:5000";
+  let host = "https://todo-app-backend-ls34.onrender.com";
 
   // Effect to sync token with localStorage
   useEffect(() => {
